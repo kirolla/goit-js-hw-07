@@ -4,43 +4,37 @@ function getRandomHexColor() {
     .padStart(6, 0)}`;
 }
 
+const controls = document.querySelector("#controls");
+const input = controls.querySelector("input");
+const createBtn = controls.querySelector("[data-create]");
+const destroyBtn = controls.querySelector("[data-destroy]");
+const boxesContainer = document.querySelector("#boxes");
+
 function createBoxes(amount) {
-  const boxesContainer = document.getElementById('boxes');
-  boxesContainer.innerHTML = '';
-
-  const initialSize = 30;
-  const sizeIncrement = 10;
-
+  const boxes = [];
   for (let i = 0; i < amount; i++) {
-    const divElement = document.createElement('div');
-    const size = initialSize + i * sizeIncrement;
-    const color = getRandomHexColor();
-
-    divElement.style.width = `${size}px`;
-    divElement.style.height = `${size}px`;
-    divElement.style.backgroundColor = color;
-    divElement.style.marginBottom = '10px';
-
-    boxesContainer.appendChild(divElement);
+    const box = document.createElement("div");
+    box.style.width = `${30 + i * 10}px`;
+    box.style.height = `${30 + i * 10}px`;
+    box.style.backgroundColor = getRandomHexColor();
+    boxes.push(box);
   }
+  boxesContainer.append(...boxes);
 }
 
-const input = document.querySelector('input[type="number"]');
-const createBtn = document.querySelector('[data-create]');
-const destroyBtn = document.querySelector('[data-destroy]');
+function destroyBoxes() {
+  boxesContainer.innerHTML = "";
+}
 
-createBtn.addEventListener('click', () => {
-  const amount = parseInt(input.value);
-
-  if (Number.isInteger(amount) && amount >= 1 && amount <= 100) {
+createBtn.addEventListener("click", () => {
+  const amount = parseInt(input.value.trim(), 10);
+  if (amount >= 1 && amount <= 100) {
+    destroyBoxes();
     createBoxes(amount);
-    input.value = '';
   } else {
-    alert('Please enter a number between 1 and 100.');
+    alert("Please enter a number between 1 and 100");
   }
+  input.value = "";
 });
 
-destroyBtn.addEventListener('click', () => {
-  const boxesContainer = document.getElementById('boxes');
-  boxesContainer.innerHTML = '';
-});
+destroyBtn.addEventListener("click", destroyBoxes);
